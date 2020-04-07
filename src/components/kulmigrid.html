@@ -1,0 +1,122 @@
+<v-container>
+    <v-layout
+    justify-center
+    text-center
+    wrap
+    fluid
+    >  
+            <v-row>
+                <v-col cols="12"
+                    md="6">      
+                    <v-simple-table class="kulmiTable" single-select>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-center">{{sTeam1}}</th>
+                                <th class="text-center">{{sTeam2}}</th>
+                                <th class="text-center">{{sTeam1}}</th>
+                                <th class="text-center">{{sTeam2}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="color in colors" :key="color">
+                                <td class="kulmiTab">{{color}}</td>
+                                <td class="kulmiTab" v-on:click="onTableClick(color, 1)" :id="color + '1'">{{getPointsTeam1(color)}}</td>
+                                <td class="kulmiTab" v-on:click="onTableClick(color, 2)" :id="color + '2'">{{getPointsTeam2(color)}}</td>
+                                <td class="kulmiTab">{{getWiesTeam1ForLine(color)}}</td>
+                                <td class="kulmiTab">{{getWiesTeam2ForLine(color)}}</td>
+                            </tr>
+                        </tbody>
+                    </v-simple-table>
+                </v-col> 
+               
+                <v-col cols="12" md="6" class="pt-zero">
+                        <v-container class="pt-zero">
+                            <v-row cols="12" class="pt-zero">
+                                <v-col cols="6" class="pt-zero"
+                                >
+                                    <v-row no-gutters >
+                                        <v-text-field
+                                            label="Punkte"
+                                            type="number"
+                                            class="mt-auto kulmiInput"
+                                            v-on:change=writePoints(true)
+                                            v-model=points1
+                                        ></v-text-field>
+                                    </v-row>
+            
+                                    <v-row no-gutters>
+                                        <v-text-field
+                                            v-model=wies1
+                                            label="Wies"
+                                            type="number"
+                                            :rules="wiesRules"
+                                            class="mb-auto kulmiInput"
+                                            v-on:change=writeWies(true)
+                                        ></v-text-field>
+                                    </v-row>
+            
+                                    <v-row no-gutters><v-checkbox 
+                                        v-model=stoeck1
+                                        label="Stöck"
+                                        class="shrink mb-auto kulmiInput"
+                                    ></v-checkbox></v-row>
+                                
+                                    <v-row no-gutters><v-checkbox
+                                        v-model=matsch1
+                                        class="shrink mt-auto mb-auto kulmiInput"
+                                        label="Matsch"
+                                        v-on:change=matschClicked(true)
+                                    ></v-checkbox></v-row>
+                                
+                                </v-col>
+            
+                                <v-col cols="6" class="pt-zero"
+                                >
+                                    <v-row no-gutters >
+                                        <v-text-field
+                                            v-model=points2
+                                            label="Punkte"
+                                            type="number"
+                                            class="mt-auto kulmiInput"
+                                            v-on:change=writePoints(false)
+                                        ></v-text-field>
+                                    </v-row>
+            
+                                    <v-row no-gutters>
+                                        <v-text-field
+                                            v-model=wies2
+                                            label="Wies"
+                                            type="number"
+                                            :rules="wiesRules"
+                                            class="mb-auto kulmiInput"
+                                            v-on:change=writeWies(false)
+                                        ></v-text-field>
+                                    </v-row>
+            
+                                    <v-row no-gutters><v-checkbox
+                                        v-model=stoeck2
+                                        label="Stöck"
+                                        class="shrink mb-auto kulmiInput"
+                                    ></v-checkbox></v-row>
+                                
+                                    <v-row no-gutters><v-checkbox
+                                        v-model=matsch2
+                                        class="shrink mt-auto mb-auto kulmiInput"
+                                        label="Matsch"
+                                        v-on:change=matschClicked(false)
+                                    ></v-checkbox></v-row>
+                                    
+                                </v-col>
+                            </v-row>
+                            <v-row no-gutters justify="space-around">
+                                F TEAM
+                                <v-btn small color="primary">Eintragen</v-btn>
+                                <v-btn small color="error">Löschen</v-btn>
+                                <v-btn small color="orange"><v-icon color="white">mdi-arrow-left</v-icon></v-btn>
+                            </v-row>
+                        </v-container>
+                </v-col> 
+        </v-row>
+    </v-layout>
+</v-container>
