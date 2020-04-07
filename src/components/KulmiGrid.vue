@@ -12,14 +12,20 @@ export default {
       team1: {
         player1: "",
         player2: "",
-        points: [{ H1: 396 }, { 71: 931 }, { E1: 10 }],
-        wies: [{ 71: 420 }]
       },
       team2: {
         player1: "",
         player2: "",
-        points: [{ E2: -29 }, { L2: 189 }, { K2: 1233 }],
-        wies: [{ E2: 20 }, { L2: 660 }]
+      },
+      rounds: {
+          round:1,
+          played: 'E1',
+          points1: '115',
+          poinst2: '42',
+          wies1: '20',
+          wies2: '0',
+          stoeck1: false,
+          stoeck2: false
       }
     },
     valid: false,
@@ -96,19 +102,17 @@ export default {
         document.getElementById(this.selected).classList.remove("marked");
       }
       this.selected = color + teamnumber.toString();
-      console.log(this.selected);
-      console.log(document.getElementById(this.selected));
       document.getElementById(this.selected).classList.add("marked");
 
       /* load the points into the editor */
     },
-    writePoints: function(isTeam1) {
+    onWritePoints: function(isTeam1) {
       if (isTeam1) {
         /* validate points */
         if (
           (this.points1 >= 0 && this.points1 <= 157) ||
-          this.points1 == 257 ||
-          this.points1 == 514
+          (this.points1 == 257 && this.isTeam1Playing()) ||
+          (this.points1 == 514 && !this.isTeam1Playing())
         ) {
           if (this.points1 > 157) {
             this.points2 = 0;
@@ -128,8 +132,8 @@ export default {
         /* validate points */
         if (
           (this.points2 >= 0 && this.points2 <= 157) ||
-          this.points2 == 257 ||
-          this.points2 == 514
+          (this.points2 == 257 && !this.isTeam1Playing()) ||
+          (this.points2 == 514 && this.isTeam1Playing()) 
         ) {
           if (this.points2 > 157) {
             this.points1 = 0;
@@ -147,7 +151,7 @@ export default {
         }
       }
     },
-    writeWies(isTeam1) {
+    onWriteWies(isTeam1) {
         if (isTeam1) {
             if (this.wies1 >= 20 && this.wies1 %10 == 0) {
                 this.wies2 = 0;
@@ -162,7 +166,7 @@ export default {
             }
         }
     },
-    matschClicked(isTeam1) {
+    onMatschClicked(isTeam1) {
         console.log("match clicked: " + isTeam1);
         if (isTeam1) {
             if (this.matsch1) {
@@ -186,8 +190,46 @@ export default {
             }
         }
     },
+    onStoeckClicked(isTeam1) {
+        if (isTeam1) {
+            if (this.stoeck1) {
+                this.stoeck2 = false;
+            }
+        } else {
+            if (this.stoeck2) {
+                this.stoeck1 = false;
+            }
+        }
+    },
     isTeam1Playing() {
         return this.selected.substring(1) == '1';
+    },
+    isCurrentStateValid() {
+        if (this.points1 < 0 || this.poinst2 < 0) return false;
+        
+        /* match cases */
+        if (this.isTeam1Playing()) {
+            if (this.points1 == 514 || this.points2 == 257) return false;
+        } else {
+            if (this.points1 == 257 || this.points2 == 514) return false;
+        }
+
+        if (this.matsch1 && this.matsch2) return false;
+
+        if (!(this.matsch1 || this.matsch2)) {
+            if (this.points1 > 157 || this.poinst2 > 157) return false;
+            if ((this.points1 + this.points2) != 157) return false;
+        }
+
+        /* validate wies */
+        if (this.wies1 < 0 || this.wies2 < 0) return false;
+        if (this.wies1 > 0 && this.wies2 > 0) return false;
+        if ((this.wies1 + this.wies2) %10 != 0) return false;
+        if (this.wies1 > 0 && this.wies2 < 20) return false;
+        if (this.wies2 > 0 && this.wies2 <20) return false;
+
+        if (this.stoeck1 && this.stoeck2) return false;
+    
     }
   },
   mounted() {

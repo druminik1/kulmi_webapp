@@ -40,7 +40,7 @@
                                             label="Punkte"
                                             type="number"
                                             class="mt-auto kulmiInput"
-                                            v-on:change=writePoints(true)
+                                            v-on:change=onWritePoints(true)
                                             v-model=points1
                                         ></v-text-field>
                                     </v-row>
@@ -52,7 +52,7 @@
                                             type="number"
                                             :rules="wiesRules"
                                             class="mb-auto kulmiInput"
-                                            v-on:change=writeWies(true)
+                                            v-on:change=onWriteWies(true)
                                         ></v-text-field>
                                     </v-row>
             
@@ -60,13 +60,14 @@
                                         v-model=stoeck1
                                         label="Stöck"
                                         class="shrink mb-auto kulmiInput"
+                                        v-on:change=onStoeckClicked(true)
                                     ></v-checkbox></v-row>
                                 
                                     <v-row no-gutters><v-checkbox
                                         v-model=matsch1
                                         class="shrink mt-auto mb-auto kulmiInput"
                                         label="Matsch"
-                                        v-on:change=matschClicked(true)
+                                        v-on:change=onMatschClicked(true)
                                     ></v-checkbox></v-row>
                                 
                                 </v-col>
@@ -79,7 +80,7 @@
                                             label="Punkte"
                                             type="number"
                                             class="mt-auto kulmiInput"
-                                            v-on:change=writePoints(false)
+                                            v-on:change=onWritePoints(false)
                                         ></v-text-field>
                                     </v-row>
             
@@ -90,7 +91,7 @@
                                             type="number"
                                             :rules="wiesRules"
                                             class="mb-auto kulmiInput"
-                                            v-on:change=writeWies(false)
+                                            v-on:change=onWriteWies(false)
                                         ></v-text-field>
                                     </v-row>
             
@@ -98,13 +99,14 @@
                                         v-model=stoeck2
                                         label="Stöck"
                                         class="shrink mb-auto kulmiInput"
+                                        v-on:change=onStoeckClicked(false)
                                     ></v-checkbox></v-row>
                                 
                                     <v-row no-gutters><v-checkbox
                                         v-model=matsch2
                                         class="shrink mt-auto mb-auto kulmiInput"
                                         label="Matsch"
-                                        v-on:change=matschClicked(false)
+                                        v-on:change=onMatschClicked(false)
                                     ></v-checkbox></v-row>
                                     
                                 </v-col>
