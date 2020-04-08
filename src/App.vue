@@ -1,7 +1,7 @@
 <template>
   <v-app>
-    <v-app-bar app>
-      <v-toolbar-title class="headline text-uppercase">
+    <v-app-bar dense>
+      <v-toolbar-title class="headline">
         <span>Kulmi</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>

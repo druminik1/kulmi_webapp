@@ -112,11 +112,12 @@
                                 </v-col>
                             </v-row>
                             <v-row no-gutters justify="space-around">
-                                F TEAM
-                                <v-btn small color="primary">Eintragen</v-btn>
-                                <v-btn small color="error">Löschen</v-btn>
-                                <v-btn small color="orange"><v-icon color="white">mdi-arrow-left</v-icon></v-btn>
+                                {{selectedWithTeams()}}
+                                <v-btn small color="primary" v-on:click=enterRound()>Eintragen</v-btn>
+                                <v-btn small color="error" v-on:click=deleteRound()>Löschen</v-btn>
+                                <v-btn small color="orange" v-on:click=goBack()><v-icon color="white">mdi-arrow-left</v-icon></v-btn>
                             </v-row>
+                            <v-row no-gutters justify="center"><v-btn small class="mt-2" color="success" v-if="state.rounds.length == 10">Zum Ergebnis</v-btn></v-row>
                         </v-container>
                 </v-col> 
         </v-row>

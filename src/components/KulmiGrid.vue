@@ -112,7 +112,7 @@ export default {
           round: 10,
           played: 'S2',
           points1: 0,
-          points2: 514,
+          points2: 257,
           wies1: 20,
           wies2: 0,
           stoeck1: true,
@@ -248,9 +248,20 @@ export default {
             }
             this.stoeck1 = r.stoeck1;
             this.stoeck2 = r.stoeck2;
+      } else {
+          this.points1 = 0;
+          this.points2 = 0;
+          this.wies1 = 0;
+          this.wies2 = 0;
+          this.matsch1 = false;
+          this.matsch2 = false;
+          this.stoeck1 = false;
+          this.stoeck2 = false;
       }
     },
     onWritePoints: function(isTeam1) {
+        this.points1 = parseInt(this.points1);
+        this.points2 = parseInt(this.points2);
       if (isTeam1) {
         /* validate points */
         if (
@@ -265,6 +276,7 @@ export default {
           } else {
             this.points2 = 157 - this.points1;
             this.matsch1 = false;
+            this.matsch2 = false;
           }
         } else {
           this.points1 = 0;
@@ -284,8 +296,9 @@ export default {
             this.matsch2 = true;
             this.matsch1 = false;
           } else {
-            this.points1 = 157 - this.points1;
+            this.points1 = 157 - this.points2;
             this.matsch2 = false;
+            this.matsch1 = false;
           }
         } else {
           this.points1 = 0;
@@ -296,6 +309,9 @@ export default {
       }
     },
     onWriteWies(isTeam1) {
+        this.wies1 = parseInt(this.wies1);
+        this.wies2 = parseInt(this.wies2);
+
         if (isTeam1) {
             if (this.wies1 >= 20 && this.wies1 %10 == 0) {
                 this.wies2 = 0;
@@ -368,14 +384,82 @@ export default {
         if (this.wies1 < 0 || this.wies2 < 0) return false;
         if (this.wies1 > 0 && this.wies2 > 0) return false;
         if ((this.wies1 + this.wies2) %10 != 0) return false;
-        if (this.wies1 > 0 && this.wies2 < 20) return false;
+        if (this.wies1 > 0 && this.wies1 < 20) return false;
         if (this.wies2 > 0 && this.wies2 <20) return false;
 
         if (this.stoeck1 && this.stoeck2) return false;
-    
+        console.log('valid');
+        return true;
     },
     pointMultiplicator(colorOrPlayed) {
         return this.colors.indexOf(colorOrPlayed.substring(0,1)) + 1;
+    },
+    deleteRound() {
+        console.log(this.state.rounds);
+        this.state.rounds = this.state.rounds.filter(r => r.played != this.selected);
+        this.points1 = 0;
+        this.points2 = 0;
+        this.matsch1 = false;
+        this.matsch2 = false;
+        this.wies1 = 0;
+        this.wies2 = 0;
+        this.stoeck1 = 0;
+        this.stoeck2 = 0;
+        console.log(this.state.rounds);
+    },
+    goBack() {
+        var highestRoundNumber = this.getHighestRoundNumber();
+        this.state.rounds = this.state.rounds.filter(r => r.round != highestRoundNumber);
+        this.roundCount = this.getHighestRoundNumber();
+    },
+    getHighestRoundNumber() {
+        var roundNumbers = this.state.rounds.map(r => r.round);
+        if (roundNumbers.length != 0) {
+            return roundNumbers.reduce((a, b) => Math.max(a,b));
+        }
+        return 0;
+    },
+    enterRound() {
+
+        if (this.matsch1) {
+            this.wies2 = 0;
+        }
+        if (this.matsch2) {
+            this.wies1 = 0;
+        }
+        
+        if (this.isCurrentStateValid()) {
+            this.roundCount += 1;
+            var alreadyPlayed = this.state.rounds.find(r => r.played == this.selected);
+
+            if (alreadyPlayed) {
+                alreadyPlayed.round = this.roundCount;
+                alreadyPlayed.points1 = this.points1;
+                alreadyPlayed.points2 = this.points2;
+                alreadyPlayed.wies1 = this.wies1;
+                alreadyPlayed.wies2 = this.wies2;
+                alreadyPlayed.matsch1 = this.matsch1;
+                alreadyPlayed.matsch2 = this.matsch2;
+                alreadyPlayed.stoeck1 = this.stoeck1;
+                alreadyPlayed.stoeck2 = this.stoeck2;
+            } else {
+                this.state.rounds.push({
+                round: this.roundCount,
+                played: this.selected,
+                points1: this.points1,
+                points2: this.points2,
+                wies1: this.wies1,
+                wies2: this.wies2,
+                stoeck1: this.stoeck1,
+                stoeck2: this.stoeck2
+                });
+            }
+        }
+    }, 
+    selectedWithTeams() {
+        console.log(this.selected);
+        if (this.selected.substring(1) == 1) return this.selected.substring(0,1) + ' ' + this.sTeam1;
+        return this.selected.substring(0,1) + ' ' + this.sTeam2;
     }
   },
   mounted() {
@@ -383,10 +467,7 @@ export default {
       this.onTableClick("E", "1");
 
       /* set the round counter if there is already a jass in the state */
-      var roundNumbers = this.state.rounds.map(r => r.round);
-      if (roundNumbers.length != 0) {
-          this.roundCount = roundNumbers.reduce((a, b) => Math.max(a, b));
-      }
+      this.roundCount = this.getHighestRoundNumber();
       
   }
 };
