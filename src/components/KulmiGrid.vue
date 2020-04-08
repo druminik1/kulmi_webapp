@@ -395,7 +395,6 @@ export default {
         return this.colors.indexOf(colorOrPlayed.substring(0,1)) + 1;
     },
     deleteRound() {
-        console.log(this.state.rounds);
         this.state.rounds = this.state.rounds.filter(r => r.played != this.selected);
         this.points1 = 0;
         this.points2 = 0;
@@ -405,12 +404,13 @@ export default {
         this.wies2 = 0;
         this.stoeck1 = 0;
         this.stoeck2 = 0;
-        console.log(this.state.rounds);
+        this.saveState();
     },
     goBack() {
         var highestRoundNumber = this.getHighestRoundNumber();
         this.state.rounds = this.state.rounds.filter(r => r.round != highestRoundNumber);
         this.roundCount = this.getHighestRoundNumber();
+        this.saveState();
     },
     getHighestRoundNumber() {
         var roundNumbers = this.state.rounds.map(r => r.round);
@@ -455,19 +455,33 @@ export default {
                 });
             }
         }
+        this.saveState();
     }, 
     selectedWithTeams() {
         console.log(this.selected);
         if (this.selected.substring(1) == 1) return this.selected.substring(0,1) + ' ' + this.sTeam1;
         return this.selected.substring(0,1) + ' ' + this.sTeam2;
+    },
+    saveState() {
+        localStorage.setItem('state', JSON.stringify(this.state));
     }
   },
   mounted() {
-      /* select the default field */
-      this.onTableClick("E", "1");
+        /* load state from local storage if possible */
+        if (localStorage.getItem('state')) {
+            try {
+                var state = JSON.parse(localStorage.getItem('state'));
+                this.state = state;
+            } catch(e) {
+                localStorage.removeItem('state');
+            }
+        }
 
-      /* set the round counter if there is already a jass in the state */
-      this.roundCount = this.getHighestRoundNumber();
+        /* select the default field */
+        this.onTableClick("E", "1");
+
+        /* set the round counter if there is already a jass in the state */
+        this.roundCount = this.getHighestRoundNumber();
       
   }
 };
