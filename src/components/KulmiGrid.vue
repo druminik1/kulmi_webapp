@@ -4,6 +4,7 @@
 <script>
 export default {
   data: () => ({
+    roundCount: 0,
     sTeam1: "DoJo",
     sTeam2: "MaBe",
     colors: ["E", "S", "L", "H", "G", "B", "7", "8", "K"],
@@ -17,16 +18,106 @@ export default {
         player1: "",
         player2: "",
       },
-      rounds: {
-          round:1,
+      rounds: [{
+          round: 1,
           played: 'E1',
-          points1: '115',
-          poinst2: '42',
-          wies1: '20',
-          wies2: '0',
-          stoeck1: false,
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
           stoeck2: false
-      }
+      },
+      {
+          round: 2,
+          played: 'S1',
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      },
+      {
+          round: 3,
+          played: 'L1',
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      },
+      {
+          round: 4,
+          played: 'H1',
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      },
+      {
+          round: 5,
+          played: 'G1',
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      },
+      {
+          round: 6,
+          played: 'B1',
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      },
+      {
+          round: 7,
+          played: '71',
+          points1: 157,
+          points2: 0,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      },
+      {
+          round: 8,
+          played: '81',
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      },
+      {
+          round: 9,
+          played: 'K1',
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      },
+      {
+          round: 10,
+          played: 'S2',
+          points1: 0,
+          points2: 514,
+          wies1: 20,
+          wies2: 0,
+          stoeck1: true,
+          stoeck2: false
+      }]
     },
     valid: false,
     firstname: "",
@@ -61,39 +152,71 @@ export default {
   }),
   methods: {
     getPointsTeam1: function(color) {
-      if (color == "E") {
-        return 123;
-      }
-      return "";
+        var points = 0;
+        var filtered = this.state.rounds.find(r => r.played === color +"1");
+        if (filtered) {
+            points = filtered.points1 - filtered.points2;
+            points *= this.pointMultiplicator(color);
+        }
+        if (points == 0) return "";
+        return points;
     },
     getPointsTeam2: function(color) {
-      if (color == "E") {
-        return 123;
-      }
-      return "";
-    },
-    getWiesTeam1Color: function(color) {
-      if (color == "E") {
-        return 123;
-      }
-      return "";
-    },
-    getWiesTeam2Color: function(color) {
-      if (color == "E") {
-        return 123;
-      }
-      return "";
+      var points = 0;
+        var filtered = this.state.rounds.find(r => r.played === color +"2");
+        if (filtered) {
+            points = filtered.points2 - filtered.points1;
+            points *= this.pointMultiplicator(color);
+        }
+        if (points == 0) return "";
+        return points;
     },
     getWiesTeam1ForLine: function(color) {
-      if (color == "E") {
-        return 123;
+      var validWiesRounds = this.state.rounds.filter(r => (r.wies1 > 0 && !(r.points2 > "157" )) || r.stoeck1);
+      var wiesNumbers = validWiesRounds.map(r => {
+          var points = 0;
+          if (r.stoeck1) {
+              points = 20;
+          } 
+          if (r.points2 <= 157) {
+              points += r.wies1;
+          }
+          return points * this.pointMultiplicator(r.played);
+      });
+      /* add exeeding number of wies at the beginning */
+      if (wiesNumbers.length > 9) {
+          for (var i = 9; i < wiesNumbers.length; i++) {
+              wiesNumbers[i%9] += wiesNumbers[i];
+          }
       }
+      var index = this.pointMultiplicator(color) -1;
+      if (index < wiesNumbers.length) {
+          return wiesNumbers[index];
+      } 
       return "";
     },
     getWiesTeam2ForLine: function(color) {
-      if (color == "E") {
-        return 123;
+      var validWiesRounds = this.state.rounds.filter(r => (r.wies2 > 0 && !(r.points1 > "157" )) || r.stoeck2);
+      var wiesNumbers = validWiesRounds.map(r => {
+          var points = 0;
+          if (r.stoeck2) {
+              points = 20;
+          } 
+          if (r.points1 <= 157) {
+              points += r.wies2;
+          }
+          return points * this.pointMultiplicator(r.played);
+      });
+      /* add exeeding number of wies at the beginning */
+      if (wiesNumbers.length > 9) {
+          for (var i = 9; i < wiesNumbers.length; i++) {
+              wiesNumbers[i%9] += wiesNumbers[i];
+          }
       }
+      var index = this.pointMultiplicator(color) -1;
+      if (index < wiesNumbers.length) {
+          return wiesNumbers[index];
+      } 
       return "";
     },
     onTableClick: function(color, teamnumber) {
@@ -105,6 +228,27 @@ export default {
       document.getElementById(this.selected).classList.add("marked");
 
       /* load the points into the editor */
+      var playedRound = this.state.rounds.filter(r => r.played == color + teamnumber.toString());
+      
+      if (playedRound.length == 1) {
+            var r = playedRound[0];
+            this.points1 = r.points1;
+            this.points2 = r.points2;
+            this.wies1 = r.wies1;
+            this.wies2 = r.wies2;
+            if (r.points1 > 157) {
+                this.matsch1 = true;
+            } else {
+                this.matsch1 = false;
+            }
+            if (r.points2 > 157) {
+                this.matsch2 = true;
+            } else {
+                this.matsch2 = false;
+            }
+            this.stoeck1 = r.stoeck1;
+            this.stoeck2 = r.stoeck2;
+      }
     },
     onWritePoints: function(isTeam1) {
       if (isTeam1) {
@@ -117,7 +261,7 @@ export default {
           if (this.points1 > 157) {
             this.points2 = 0;
             this.matsch1 = true;
-            this.mathsch2 = false;
+            this.matsch2 = false;
           } else {
             this.points2 = 157 - this.points1;
             this.matsch1 = false;
@@ -167,7 +311,6 @@ export default {
         }
     },
     onMatschClicked(isTeam1) {
-        console.log("match clicked: " + isTeam1);
         if (isTeam1) {
             if (this.matsch1) {
                 this.matsch2 = false;
@@ -205,7 +348,7 @@ export default {
         return this.selected.substring(1) == '1';
     },
     isCurrentStateValid() {
-        if (this.points1 < 0 || this.poinst2 < 0) return false;
+        if (this.points1 < 0 || this.points2 < 0) return false;
         
         /* match cases */
         if (this.isTeam1Playing()) {
@@ -217,7 +360,7 @@ export default {
         if (this.matsch1 && this.matsch2) return false;
 
         if (!(this.matsch1 || this.matsch2)) {
-            if (this.points1 > 157 || this.poinst2 > 157) return false;
+            if (this.points1 > 157 || this.points2 > 157) return false;
             if ((this.points1 + this.points2) != 157) return false;
         }
 
@@ -230,10 +373,21 @@ export default {
 
         if (this.stoeck1 && this.stoeck2) return false;
     
+    },
+    pointMultiplicator(colorOrPlayed) {
+        return this.colors.indexOf(colorOrPlayed.substring(0,1)) + 1;
     }
   },
   mounted() {
+      /* select the default field */
       this.onTableClick("E", "1");
+
+      /* set the round counter if there is already a jass in the state */
+      var roundNumbers = this.state.rounds.map(r => r.round);
+      if (roundNumbers.length != 0) {
+          this.roundCount = roundNumbers.reduce((a, b) => Math.max(a, b));
+      }
+      
   }
 };
 </script>
