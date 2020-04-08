@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar dense>
+    <v-app-bar dense app>
       <v-toolbar-title class="headline">
         <span>Kulmi</span>
       </v-toolbar-title>
@@ -16,18 +16,20 @@
     </v-app-bar>
 
     <v-content>
-      <KulmiGrid />
+      <LandingScreen />
     </v-content>
   </v-app>
 </template>
 
 <script>
-import KulmiGrid from './components/KulmiGrid';
+//import KulmiGrid from './components/KulmiGrid';
+import LandingScreen from './components/LandingScreen';
 
 export default {
   name: 'App',
   components: {
-    KulmiGrid,
+    //KulmiGrid,
+    LandingScreen,
   },
   data: () => ({
     //
