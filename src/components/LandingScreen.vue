@@ -10,7 +10,7 @@ export default {
         player3: '',
         player4: '',
         sTeam1: '',
-        sTeam2: '',
+        sTeam2: ''
     }),
     methods: {
         startJass() {

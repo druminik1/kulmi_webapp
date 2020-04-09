@@ -49,3 +49,8 @@ td, th {
 .marked {
     background-color: lightgreen;
 }
+
+.textStart {
+    text-align: start;
+}
+

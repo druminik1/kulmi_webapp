@@ -6,8 +6,7 @@
     fluid
     >  
             <v-row>
-                <v-col cols="12"
-                    md="6">      
+                <v-col cols="12" md="6">      
                     <v-simple-table class="kulmiTable" single-select>
                         <thead>
                             <tr>
@@ -30,9 +29,9 @@
                     </v-simple-table>
                 </v-col> 
                
-                <v-col cols="12" md="6" class="pt-zero">
-                        <v-container class="pt-zero">
-                            <v-row cols="12" class="pt-zero">
+                <v-col cols="12" md="6" class="pt-2">
+                        <v-container class="pt-zero" >
+                            <v-row cols="12" class="pt-zero" v-if="!showResult">
                                 <v-col cols="6" class="pt-zero"
                                 >
                                     <v-row no-gutters >
@@ -111,13 +110,35 @@
                                     
                                 </v-col>
                             </v-row>
-                            <v-row no-gutters justify="space-around">
+
+                            
+
+                            <v-row no-gutters justify="space-between" v-if="!showResult">
                                 {{selectedWithTeams()}}
                                 <v-btn small color="primary" v-on:click=enterRound()>Eintragen</v-btn>
                                 <v-btn small color="error" v-on:click=deleteRound()>Löschen</v-btn>
                                 <v-btn small color="orange" v-on:click=goBack()><v-icon color="white">mdi-arrow-left</v-icon></v-btn>
                             </v-row>
-                            <v-row no-gutters justify="center"><v-btn small class="mt-2" color="success" v-if="state.rounds.length == 10">Zum Ergebnis</v-btn></v-row>
+                            <v-row v-if="!showResult" no-gutters justify="center"><v-btn small class="mt-2" color="success" v-if="state.rounds.length == 18" v-on:click="showResult = true">Zum Ergebnis</v-btn></v-row>
+                            
+                            <v-card raised shaped>
+                                <v-row no-gutters v-if="showResult" class="pt-2">
+                                    <v-col cols="6" class="pa-5" no-gutters>
+                                        <h4 class="textStart">{{state.team1.player1}}</h4>
+                                        <h4 class="textStart">{{state.team1.player2}}</h4>
+                                        <p class="textStart pt-1">Punkte: {{calcResult().points1}}</br>
+                                        Wies: {{calcResult().wies1}}</br>
+                                        Gesamt: {{calcResult().total1}}</p>
+                                    </v-col>
+                                    <v-col cols="6" class="pa-5" no-gutters>
+                                        <h4 class="textStart">{{state.team2.player1}}</h4>
+                                        <h4 class="textStart">{{state.team2.player2}}</h4>
+                                        <p class="textStart pt-1">Punkte: {{calcResult().points2}}</br>
+                                        Wies: {{calcResult().wies2}}</br>
+                                        Gesamt: {{calcResult().total2}}</p>
+                                    </v-col>
+                                </v-row>
+                            </v-card>
                         </v-container>
                 </v-col> 
         </v-row>

@@ -130,6 +130,7 @@ export default {
     matsch2: false,
     stoeck1: false,
     stoeck2: false,
+    showResult: false,
     pointRules: [
       v => !!v || "",
       v => v >= 0 || "",
@@ -452,7 +453,35 @@ export default {
     },
     saveState() {
         localStorage.setItem(this.jassId, JSON.stringify(this.state));
+    },
+    calcResult() {
+        var sumPoints1 = 0;
+        var sumPoints2 = 0;
+        var sumWies1 = 0;
+        var sumWies2 = 0;
+        this.colors.forEach(color => {
+            sumPoints1 += this.getPointsTeam1(color);
+            sumPoints2 += this.getPointsTeam2(color);
+            if(this.getWiesTeam1ForLine(color) !== '') {
+                sumWies1 += this.getWiesTeam1ForLine(color);
+            }
+            if (this.getWiesTeam2ForLine(color) !== '') {
+                sumWies2 += this.getWiesTeam2ForLine(color);
+            }
+            
+        });
+        console.log(sumWies1);
+        console.log(sumPoints1);
+        return {
+            points1: sumPoints1,
+            points2: sumPoints2,
+            wies1: sumWies1,
+            wies2: sumWies2,
+            total1: (sumWies1 + sumPoints1),
+            total2: (sumWies2 + sumPoints2)
+        };
     }
+
   },
   mounted() {
         if (!(this.$route.params.jassId)) {
