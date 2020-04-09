@@ -5,20 +5,21 @@
 export default {
   data: () => ({
     roundCount: 0,
-    sTeam1: "DoJo",
-    sTeam2: "MaBe",
     colors: ["E", "S", "L", "H", "G", "B", "7", "8", "K"],
+    jassId: "defaultId",
     state: {
       date: "",
       team1: {
         player1: "",
         player2: "",
+        sTeam: ""
       },
       team2: {
         player1: "",
         player2: "",
+        sTeam: ""
       },
-      rounds: [{
+      rounds: [/*{
           round: 1,
           played: 'E1',
           points1: 0,
@@ -117,11 +118,9 @@ export default {
           wies2: 0,
           stoeck1: true,
           stoeck2: false
-      }]
+      }*/]
     },
     valid: false,
-    firstname: "",
-    lastname: "",
     selected: "",
     points1: 0,
     points2: 0,
@@ -131,15 +130,6 @@ export default {
     matsch2: false,
     stoeck1: false,
     stoeck2: false,
-    nameRules: [
-      v => !!v || "Name is required",
-      v => v.length <= 10 || "Name must be less than 10 characters"
-    ],
-    email: "",
-    emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+/.test(v) || "E-mail must be valid"
-    ],
     pointRules: [
       v => !!v || "",
       v => v >= 0 || "",
@@ -340,7 +330,7 @@ export default {
         } else {
             if (this.matsch2) {
                 this.matsch1 = false;
-                if (this.isTeam1Playing) {
+                if (this.isTeam1Playing()) {
                     this.points2 = 514;
                 } else {
                     this.points2 = 257;
@@ -388,7 +378,6 @@ export default {
         if (this.wies2 > 0 && this.wies2 <20) return false;
 
         if (this.stoeck1 && this.stoeck2) return false;
-        console.log('valid');
         return true;
     },
     pointMultiplicator(colorOrPlayed) {
@@ -458,31 +447,52 @@ export default {
         this.saveState();
     }, 
     selectedWithTeams() {
-        console.log(this.selected);
-        if (this.selected.substring(1) == 1) return this.selected.substring(0,1) + ' ' + this.sTeam1;
-        return this.selected.substring(0,1) + ' ' + this.sTeam2;
+        if (this.selected.substring(1) == 1) return this.selected.substring(0,1) + ' ' + this.state.team1.sTeam;
+        return this.selected.substring(0,1) + ' ' + this.state.team2.sTeam;
     },
     saveState() {
-        localStorage.setItem('state', JSON.stringify(this.state));
+        localStorage.setItem(this.jassId, JSON.stringify(this.state));
     }
   },
   mounted() {
-        /* load state from local storage if possible */
-        if (localStorage.getItem('state')) {
+        if (!(this.$route.params.jassId)) {
+            this.$router.replace({name: "home"});
+        }
+        var jassParams = this.$route.params;
+        this.jassId = jassParams.jassId;
+        
+        var newJass = true;
+        /* load existing state if possible */
+        if (localStorage.getItem(jassParams.jassId)) {
             try {
-                var state = JSON.parse(localStorage.getItem('state'));
-                this.state = state;
+                this.state = JSON.parse(localStorage.getItem(jassParams.jassId));
+                newJass = false;
             } catch(e) {
-                localStorage.removeItem('state');
+                localStorage.removeItem(jassParams.jassId);
             }
         }
+
+        if(newJass) {
+            try {
+                this.state.team1.player1 = jassParams.player1;
+                this.state.team1.player2 = jassParams.player2;
+                this.state.team1.sTeam = jassParams.sTeam1;
+                this.state.team2.player1 = jassParams.player3;
+                this.state.team2.player2 = jassParams.player4;
+                this.state.team2.sTeam = jassParams.sTeam2;
+            } catch(e) {
+                this.$router.replace({name: "home"});
+            }
+        }
+
+        this.saveState();
+        
 
         /* select the default field */
         this.onTableClick("E", "1");
 
         /* set the round counter if there is already a jass in the state */
         this.roundCount = this.getHighestRoundNumber();
-      
   }
 };
 </script>

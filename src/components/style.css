@@ -20,12 +20,22 @@ td, th {
         width: inherit;
         min-width: 300px;
     }
+
+    .landingList {
+        max-height:150px;
+    }
 }
 
-@media screen and (min-width: 620px) {
+@media screen and (min-width: 540px) {
 
-    .kulmiTable {
-       /* width: 600px; */
+    .landingList {
+        max-height: 300px;
+    }
+}
+
+@media screen and (min-width: 960px) {
+    .landingList {
+        max-height: 450px
     }
 }
 

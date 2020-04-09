@@ -25,6 +25,16 @@ export default {
                 localStorage.setItem('jaesse', JSON.stringify(this.jaesse));
                 
                 //TODO start jass
+                this.$router.push({name: 'jass', params: 
+                    {
+                        jassId: newId, 
+                        player1: this.player1,
+                        player2: this.player2,
+                        player3: this.player3,
+                        player4: this.player4,
+                        sTeam1: this.sTeam1,
+                        sTeam2: this.sTeam2
+                    }});
             }
 
         },
@@ -32,6 +42,9 @@ export default {
             var date = new Date();
             var dateString = date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + "_" + date.getHours() + ":" + date.getMinutes();
             return dateString;
+        },
+        openJass(jass) {
+            this.$router.push({name: 'jass', params: {jassId: jass}});
         }
     },
     mounted() {
