@@ -41,6 +41,7 @@
                                             class="mt-auto kulmiInput"
                                             v-on:change=onWritePoints(true)
                                             v-model=points1
+                                            @focus="$event.target.select()"
                                         ></v-text-field>
                                     </v-row>
             
@@ -52,6 +53,7 @@
                                             :rules="wiesRules"
                                             class="mb-auto kulmiInput"
                                             v-on:change=onWriteWies(true)
+                                             @focus="$event.target.select()"
                                         ></v-text-field>
                                     </v-row>
             
@@ -80,6 +82,7 @@
                                             type="number"
                                             class="mt-auto kulmiInput"
                                             v-on:change=onWritePoints(false)
+                                            @focus="$event.target.select()"
                                         ></v-text-field>
                                     </v-row>
             
@@ -91,6 +94,7 @@
                                             :rules="wiesRules"
                                             class="mb-auto kulmiInput"
                                             v-on:change=onWriteWies(false)
+                                            @focus="$event.target.select()"
                                         ></v-text-field>
                                     </v-row>
             
