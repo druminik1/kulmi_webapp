@@ -23,6 +23,7 @@ import VueRouter from 'vue-router';
 
 const routes = [
     { path: '/', name: 'home', component: LandingScreen },
+    { path: '/revanche', name: 'revanche', component: LandingScreen },
     { path: '/jass', name: 'jass', component: KulmiGrid, props: true}
 ]
 

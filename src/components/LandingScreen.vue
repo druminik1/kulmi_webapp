@@ -14,7 +14,6 @@ export default {
     }),
     methods: {
         startJass() {
-            console.log('hello');
             if (this.player1 !== '' && this.player2 !== '' && this.player3 !== '' && this.player4 !== '') {
                 
                 this.sTeam1 = this.player1.substring(0,2) + this.player2.substring(0,2);
@@ -24,7 +23,6 @@ export default {
                 this.jaesse.push(newId);
                 localStorage.setItem('jaesse', JSON.stringify(this.jaesse));
                 
-                //TODO start jass
                 this.$router.push({name: 'jass', params: 
                     {
                         jassId: newId, 
@@ -45,6 +43,23 @@ export default {
         },
         openJass(jass) {
             this.$router.push({name: 'jass', params: {jassId: jass}});
+        },
+        playRevanche(oParams) {
+            var newId = this.getDate() + "_" + oParams.sTeam1 + "_vs_" + oParams.sTeam2;
+            console.log(newId);
+            this.jaesse.push(newId);
+            localStorage.setItem('jaesse', JSON.stringify(this.jaesse));
+            
+            this.$router.push({name: 'jass', params: 
+                {
+                    jassId: newId, 
+                    player1: oParams.player1,
+                    player2: oParams.player2,
+                    player3: oParams.player3,
+                    player4: oParams.player4,
+                    sTeam1: oParams.sTeam1,
+                    sTeam2: oParams.sTeam2
+                }});
         }
     },
     mounted() {
@@ -52,11 +67,14 @@ export default {
         if (storedKeys) {
             try {
                 var jaesse = JSON.parse(localStorage.getItem('jaesse'));
-                jaesse.sort((a, b) => a < b);
+                jaesse.sort((a, b) => b.localeCompare(a));
                 this.jaesse = jaesse;
             } catch(e) {
                 localStorage.removeItem('jaesse');
             }
+        }
+        if (this.$route.name == 'revanche') {
+            this.playRevanche(this.$route.params);
         }
     }
 };

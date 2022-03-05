@@ -480,8 +480,18 @@ export default {
             total1: (sumWies1 + sumPoints1),
             total2: (sumWies2 + sumPoints2)
         };
-    }
-
+    },
+    startNewGame() {            
+        this.$router.push({name: 'revanche', params: 
+            {
+                player1: this.state.team1.player1,
+                player2: this.state.team1.player2,
+                player3: this.state.team2.player1,
+                player4: this.state.team2.player2,
+                sTeam1: this.state.team1.sTeam,
+                sTeam2: this.state.team2.sTeam
+            }});
+    },
   },
   mounted() {
         if (!(this.$route.params.jassId)) {
