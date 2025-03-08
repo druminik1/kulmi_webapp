@@ -493,6 +493,7 @@ export default {
             }});
     },
   },
+  /* dummy change */
   mounted() {
         if (!(this.$route.params.jassId)) {
             this.$router.replace({name: "home"});
